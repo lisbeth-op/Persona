@@ -299,6 +299,7 @@ fun ExpandedContent(viewModel: PersonaViewModel) {
                 Icon(imageVector = Icons.Filled.DateRange, contentDescription = "email icon")
             },
             isError = viewModel.fechaNacError,
+
             trailingIcon = {
                 AnimatedVisibility(
                     visible = viewModel.fechaNacError,
@@ -325,9 +326,10 @@ fun ExpandedContent(viewModel: PersonaViewModel) {
             value = viewModel.ocupacion,
             onValueChange = viewModel::onOcupacionChanged,
             leadingIcon ={
-                Icon(imageVector = Icons.Filled.Build, contentDescription = "email icon")
+                Icon(imageVector = Icons.Filled.Build, contentDescription = null)
             },
             isError = viewModel.ocupacionError,
+
             trailingIcon = {
                 AnimatedVisibility(
                     visible = viewModel.ocupacionError,

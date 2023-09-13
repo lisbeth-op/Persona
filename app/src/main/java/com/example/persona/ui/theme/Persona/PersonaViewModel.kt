@@ -48,27 +48,34 @@ class PersonaViewModel @Inject constructor(
     }
     fun onNombreChanged(valor: String) {
         nombre = valor
-        nombreError = valor.isBlank()
+        nombreError = valor.isBlank()|| valor.length < 3
     }
     fun onTelefonoChanged(valor: String) {
         telefono= valor
         telefonoError = valor.isBlank()
     }
+    fun validarCampos(): Boolean {
+        nombreError = nombre.isBlank() || nombre.length < 3
+        telefonoError = telefono.isBlank() || !telefono.matches("^\\d{11}\$".toRegex())
 
+        return !(nombreError || telefonoError  || celularError|| emailError||fechaNacError)
+    }
     fun oncelularChanged(valor: String) {
         celular= valor
-        celularError = valor.isBlank()
+        celularError = valor.isBlank()|| !valor.matches("^\\d{10}\$".toRegex())
     }
     fun onEmailChanged(valor: String) {
         email= valor
-        emailError = valor.isBlank()
+        emailError = valor.isBlank()|| !valor.matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$".toRegex())
     }
 
     fun onfechaNacChanged(valor: String) {
         fechaNac= valor
-        fechaNacError = valor.isBlank()
+        fechaNacError = valor.isBlank()||!valor.matches("^\\d{2}/\\d{2}/\\d{4}\$".toRegex())
     }
+
     fun onOcupacionChanged(valor: String) {
+
         ocupacion= valor
         ocupacionError = valor.isBlank()
     }
@@ -81,17 +88,19 @@ class PersonaViewModel @Inject constructor(
             initialValue = emptyList()
         )
     fun savePersona() {
-        viewModelScope.launch {
-            val persona = PersonaEntity(
-                Nombre = nombre,
-                Telefono = telefono,
-                Celular = celular,
-                Email = email,
-                FechaNacimiento = fechaNac,
-                Ocupacion = ocupacion
-            )
-            PersonaRepository.save(persona)
-            limpiar()
+        if (validarCampos()) {
+            viewModelScope.launch {
+                val persona = PersonaEntity(
+                    Nombre = nombre,
+                    Telefono = telefono,
+                    Celular = celular,
+                    Email = email,
+                    FechaNacimiento = fechaNac,
+                    Ocupacion = ocupacion
+                )
+                PersonaRepository.save(persona)
+                limpiar()
+            }
         }
     }
 
